@@ -1,0 +1,10 @@
+pinout:
+NRF24           UNO
+    GND         GND
+    VCC         3.3V
+    CE          8
+    CSN         10
+    SCK         13
+    MOSI        11
+    MISO        12
+    IRQ         9
