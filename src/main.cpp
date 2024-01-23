@@ -73,7 +73,7 @@ void loop() {
   radioError(radio_code);
 
   // wait a few seconds between measurements.
-  delay(2000);
+  delay(5000);
 }
 
 float tempRead() {
@@ -108,8 +108,15 @@ int rainRead() {
 }
 
 int moistRead() {
-  int sensorValue = analogRead(SOIL_PIN);
-  return 1023 - sensorValue; // inverted because soil moisture sensor is weird
+  int sensorValue = 1023 - analogRead(SOIL_PIN);
+
+  // clamp and map moisture 
+  if (sensorValue < 520) sensorValue = 520;
+  if (sensorValue > 820) sensorValue = 820;
+
+  sensorValue = map(sensorValue, 520, 820, 0, 100);
+
+  return sensorValue; // inverted because soil moisture sensor is weird
 }
 
 void radioError(int state) {
