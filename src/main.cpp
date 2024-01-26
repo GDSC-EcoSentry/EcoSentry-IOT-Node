@@ -23,6 +23,7 @@ nRF24 radio = new Module(10, 9, 8);
 // Buffer to store received messages
 char msg[60];
 
+char nodeID = 1;
 
 void setup() {
   Serial.begin(9600);
@@ -62,10 +63,11 @@ void loop() {
   int rain = rainRead();
   int moisture = moistRead();
 
-  String message = String(temp, 2) + "," + 
-                 String(humidity, 2) + "," + 
-                 String(rain) + "," +
-                 String(moisture);
+  String message = String((int) nodeID) + "," + 
+                  String(temp, 2) + "," + 
+                  String(humidity, 2) + "," + 
+                  String(rain) + "," +
+                  String(moisture);
 
   message.toCharArray(msg, sizeof(msg));
   Serial.print("Sending message: "); Serial.println(msg);
