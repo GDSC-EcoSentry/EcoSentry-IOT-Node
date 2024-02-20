@@ -4,12 +4,16 @@
 
 #define RAIN_PIN A0
 #define SOIL_PIN A1
+#define CO_PIN A4
+#define DUST_PIN A5
 #define DHT22_PIN 2
 
 float tempRead();
 float humidRead();
 int rainRead();
 int moistRead();
+int coRead();
+int dustRead();
 void radioError(int);
 
 DHT dht22(DHT22_PIN, DHT22);
@@ -62,12 +66,16 @@ void loop() {
   float humidity = humidRead();
   int rain = rainRead();
   int moisture = moistRead();
+  int co = coRead();
+  int dust = dustRead();
 
   String message = String((int) nodeID) + "," + 
                   String(temp, 2) + "," + 
                   String(humidity, 2) + "," + 
                   String(rain) + "," +
-                  String(moisture);
+                  String(moisture) + "," +
+                  String(co) + "," +
+                  String(dust);
 
   message.toCharArray(msg, sizeof(msg));
   Serial.print("Sending message: "); Serial.println(msg);
@@ -119,6 +127,24 @@ int moistRead() {
   sensorValue = map(sensorValue, 520, 820, 0, 100);
 
   return sensorValue; // inverted because soil moisture sensor is weird
+}
+
+int coRead() {
+  int sensorValue = analogRead(CO_PIN);
+  // clamp and map moisture 
+  if (sensorValue < 50) sensorValue = 50;
+  if (sensorValue > 1023) sensorValue = 1023;
+
+  sensorValue = map(sensorValue, 50, 1023, 10, 1000);
+
+  return sensorValue; // inverted because soil moisture sensor is weird
+
+
+  return sensorValue;
+}
+
+int dustRead() {
+  return analogRead(DUST_PIN);
 }
 
 void radioError(int state) {
